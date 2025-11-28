@@ -1,0 +1,38 @@
+@use './tokens' as *;
+
+//------ BREAKPOINT ------//
+
+/// Mobile-only (≤ 767px)
+@mixin mobile {
+  @media (max-width: $bp-mobile-max) {
+    @content;
+  }
+}
+
+/// Tablet-only (768px → 1199px)
+@mixin tablet {
+  @media (min-width: $bp-tablet-min) and (max-width: ($bp-desktop-min - 1)) {
+    @content;
+  }
+}
+
+/// Desktop-only (≥ 1200px)
+@mixin desktop {
+  @media (min-width: $bp-desktop-min) {
+    @content;
+  }
+}
+
+/// From tablet upward
+@mixin from-tablet {
+  @media (min-width: $bp-tablet-min) {
+    @content;
+  }
+}
+
+/// From desktop upward
+@mixin from-desktop {
+  @media (min-width: $bp-desktop-min) {
+    @content;
+  }
+}
