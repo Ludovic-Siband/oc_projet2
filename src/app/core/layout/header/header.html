@@ -3,7 +3,7 @@
     <h2>{{ title }}</h2>
   </div>
 
-  <div class="page-header__indicators" *ngIf="indicators?.length">
+  <div class="page-header__indicators" *ngIf="indicators.length">
     <div class="page-header__indicator" *ngFor="let indicator of indicators">
       <p class="page-header__indicator-label">
         {{ indicator.label }}
