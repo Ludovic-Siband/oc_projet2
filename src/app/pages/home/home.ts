@@ -4,9 +4,9 @@ import { Router } from '@angular/router';
 import { take } from 'rxjs';
 
 
-import { PieChart } from 'src/app/components/pie-chart/pie-chart';
+import { PieChart } from 'src/app/shared/components/pie-chart/pie-chart';
 import { Olympic } from 'src/app/shared/models/olympic.model';
-import { OlympicDataService } from 'src/app/shared/services/oympic-data.service';
+import { OlympicDataService } from 'src/app/shared/services/olympic-data.service';
 import { ToastService } from 'src/app/core/toast/toast.service';
 import { HeaderService } from 'src/app/core/layout/header/header.service';
 import { HeaderIndicator } from 'src/app/core/layout/header/header.model';
