@@ -1,0 +1,20 @@
+<header class="page-header">
+  <div class="page-header__title">
+    <h2>{{ title }}</h2>
+  </div>
+
+  @if (indicators.length > 0) {
+    <div class="page-header__indicators">
+      @for (indicator of indicators; track indicator.label) {
+        <div class="page-header__indicator">
+          <p class="page-header__indicator-label">
+            {{ indicator.label }}
+          </p>
+          <p class="page-header__indicator-value">
+            {{ indicator.value }}
+          </p>
+        </div>
+      }
+    </div>
+  }
+</header>

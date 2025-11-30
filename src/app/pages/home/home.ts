@@ -1,71 +1,97 @@
-import {HttpClient, HttpErrorResponse} from '@angular/common/http';
-import {Component, OnInit} from '@angular/core';
+import { Component, OnInit, computed, inject, signal } from '@angular/core';
 import { Router } from '@angular/router';
-import Chart from 'chart.js/auto';
+
+import { take } from 'rxjs';
+
+
+import { PieChart } from 'src/app/shared/components/pie-chart/pie-chart';
+import { Olympic } from 'src/app/shared/models/olympic.model';
+import { OlympicDataService } from 'src/app/shared/services/olympic-data.service';
+import { ToastService } from 'src/app/core/toast/toast.service';
+import { HeaderService } from 'src/app/core/layout/header/header.service';
+import { HeaderIndicator } from 'src/app/core/layout/header/header.model';
+
 
 @Component({
-    selector: 'app-home',
-    templateUrl: './home.html',
-    styleUrls: ['./home.scss'],
-    standalone: true,
+  selector: 'app-home',
+  standalone: true,
+  templateUrl: './home.html',
+  styleUrls: ['./home.scss'],
+  imports: [PieChart]
 })
-export class HomeComponent implements OnInit {
-  private olympicUrl = './assets/mock/olympic.json';
-  public pieChart!: Chart<"pie", number[], string>;
-  public totalCountries: number = 0
-  public totalJOs: number = 0
-  public error!:string
-  titlePage: string = "Medals per Country";
 
-  constructor(private router: Router, private http:HttpClient) { }
+export class Home implements OnInit {
+  readonly titlePage = 'Medals per Country';
 
-  ngOnInit() {
-    this.http.get<any[]>(this.olympicUrl).pipe().subscribe(
-      (data) => {
-        console.log(`Liste des données : ${JSON.stringify(data)}`);
-        if (data && data.length > 0) {
-          this.totalJOs = Array.from(new Set(data.map((i: any) => i.participations.map((f: any) => f.year)).flat())).length;
-          const countries: string[] = data.map((i: any) => i.country);
-          this.totalCountries = countries.length;
-          const medals = data.map((i: any) => i.participations.map((i: any) => (i.medalsCount)));
-          const sumOfAllMedalsYears = medals.map((i) => i.reduce((acc: any, i: any) => acc + i, 0));
-          this.buildPieChart(countries, sumOfAllMedalsYears);
-        }
-      },
-      (error:HttpErrorResponse) => {
-        console.log(`erreur : ${error}`);
-        this.error = error.message
-      }
+  private readonly countriesSignal = signal<Olympic[]>([]);
+
+  readonly isLoading = signal(true);
+
+  readonly totalCountries = computed(() => this.countriesSignal().length);
+
+  readonly totalJOs = computed(() => {
+    const years = new Set<number>();
+    this.countriesSignal().forEach((country) =>
+      country.participations.forEach((p) => years.add(p.year))
+    );
+    return years.size;
+  });
+
+  readonly chartLabels = computed(() =>
+    this.countriesSignal().map((c) => c.country)
+  );
+
+  readonly chartValues = computed(() =>
+    this.countriesSignal().map((c) =>
+      c.participations.reduce((sum, p) => sum + p.medalsCount, 0)
     )
+  );
+
+  private readonly router = inject(Router);
+  private readonly olympicDataService = inject(OlympicDataService);
+  private readonly toastService = inject(ToastService);
+  private readonly headerService = inject(HeaderService);
+
+  ngOnInit(): void {
+    this.updateHeader();
+    
+    this.olympicDataService
+      .getCountries$()
+      .pipe(take(1))
+      .subscribe({
+        next: (countries) => {
+          this.countriesSignal.set(countries);
+          this.updateHeader();
+          this.isLoading.set(false);
+        },
+        error: () => {
+          this.isLoading.set(false); 
+          this.toastService.showError(
+            'An error occurred while loading olympic data.',
+            6000);
+        },
+      });
   }
 
-  buildPieChart(countries: string[], sumOfAllMedalsYears: number[]) {
-    const pieChart = new Chart("DashboardPieChart", {
-      type: 'pie',
-      data: {
-        labels: countries,
-        datasets: [{
-          label: 'Medals',
-          data: sumOfAllMedalsYears,
-          backgroundColor: ['#0b868f', '#adc3de', '#7a3c53', '#8f6263', 'orange', '#94819d'],
-          hoverOffset: 4
-        }],
+  onCountrySelected(country: string): void {
+    this.router.navigate(['country', country]);
+  }
+
+  private updateHeader(): void {
+    const indicators: HeaderIndicator[] = [
+      {
+        label: 'Number of countries',
+        value: this.totalCountries()
       },
-      options: {
-        aspectRatio: 2.5,
-        onClick: (e) => {
-          if (e.native) {
-            const points = pieChart.getElementsAtEventForMode(e.native, 'point', { intersect: true }, true)
-            if (points.length) {
-              const firstPoint = points[0];
-              const countryName = pieChart.data.labels ? pieChart.data.labels[firstPoint.index] : '';
-              this.router.navigate(['country', countryName]);
-            }
-          }
-        }
+      {
+        label: 'Total Olympic Games',
+        value: this.totalJOs()
       }
+    ];
+
+    this.headerService.setHeader({
+      title: this.titlePage,
+      indicators
     });
-    this.pieChart = pieChart;
   }
 }
-
