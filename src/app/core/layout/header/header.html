@@ -3,14 +3,18 @@
     <h2>{{ title }}</h2>
   </div>
 
-  <div class="page-header__indicators" *ngIf="indicators.length">
-    <div class="page-header__indicator" *ngFor="let indicator of indicators">
-      <p class="page-header__indicator-label">
-        {{ indicator.label }}
-      </p>
-      <p class="page-header__indicator-value">
-        {{ indicator.value }}
-      </p>
+  @if (indicators.length > 0) {
+    <div class="page-header__indicators">
+      @for (indicator of indicators; track indicator.label) {
+        <div class="page-header__indicator">
+          <p class="page-header__indicator-label">
+            {{ indicator.label }}
+          </p>
+          <p class="page-header__indicator-value">
+            {{ indicator.value }}
+          </p>
+        </div>
+      }
     </div>
-  </div>
+  }
 </header>

@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { NgForOf, NgClass } from '@angular/common';
 import { ToastService } from './toast.service';
 import { ToastModel } from './toast.model';
 
@@ -10,17 +9,17 @@ import { ToastModel } from './toast.model';
 @Component({
   selector: 'app-toast',
   standalone: true,
-  imports: [NgForOf, NgClass],
   template: `
-    <div class="toast-container">
-      <div
-        class="toast"
-        *ngFor="let toast of toasts()"
-        [ngClass]="toast.type"
-        (click)="dismiss(toast)"
-      >
-        {{ toast.message }}
-      </div>
+ <div class="toast-container">
+      @for (toast of toasts(); track toast.id) {
+        <div
+          class="toast"
+          [class]="toast.type"
+          (click)="dismiss(toast)"
+        >
+          {{ toast.message }}
+        </div>
+      }
     </div>
   `,
   styleUrls: ['./toast-container.scss'],
