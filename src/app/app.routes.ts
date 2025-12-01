@@ -1,6 +1,6 @@
 import { Routes } from '@angular/router'
 import { Home } from './pages/home/home';
-import { NotFoundComponent } from './pages/not-found/not-found';
+import { NotFound } from './pages/not-found/not-found';
 import { CountryDetail } from "./pages/country-detail/country-detail";
 
 export const routes: Routes = [
@@ -14,6 +14,6 @@ export const routes: Routes = [
   },
   {
     path: '**',
-    component: NotFoundComponent,
+    component: NotFound,
   },
 ];

@@ -1,15 +1,29 @@
-import { Component } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { ChangeDetectionStrategy, Component, OnInit, inject } from '@angular/core';
+import { Router } from '@angular/router';
+
+import { HeaderService } from 'src/app/core/layout/header/header.service';
 
 @Component({
-    selector: 'app-not-found',
-    templateUrl: './not-found.html',
-    styleUrls: ['./not-found.scss'],
-    standalone: true,
-    imports: [RouterLink]
+  selector: 'app-not-found',
+  templateUrl: './not-found.html',
+  styleUrls: ['./not-found.scss'],
+  standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class NotFoundComponent {
+export class NotFound implements OnInit {
+  readonly titlePage = 'Page not found';
 
-  constructor() { }
+  private readonly headerService = inject(HeaderService);
+  private readonly router = inject(Router);
 
+  ngOnInit(): void {
+    this.headerService.setHeader({
+      title: this.titlePage,
+      indicators: [],
+    });
+  }
+
+  onBackToHome(): void {
+  this.router.navigate(['/']);
+  }
 }

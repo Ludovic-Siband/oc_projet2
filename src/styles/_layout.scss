@@ -27,6 +27,23 @@
   font-style: italic;
 }
 
+.page__return-home{
+  display: flex;
+  justify-content: center;
+  margin-top: $space-m;
+
+  button {
+    padding: $space-xs $space-m;
+    border-radius: 999px;
+    border: 1px solid #0b868f;
+    cursor: pointer;
+
+    &:hover{
+      opacity: 0.85;
+    }
+  }
+}
+
 @include mix.tablet {
   .page {
     padding: $space-l $space-m;
