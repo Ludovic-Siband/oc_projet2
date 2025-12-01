@@ -1,7 +1,7 @@
 import { Routes } from '@angular/router'
 import { Home } from './pages/home/home';
 import { NotFoundComponent } from './pages/not-found/not-found';
-import { CountryComponent } from "./pages/country/country";
+import { CountryDetail } from "./pages/country-detail/country-detail";
 
 export const routes: Routes = [
   {
@@ -9,13 +9,8 @@ export const routes: Routes = [
     component: Home,
   },
   {
-    path: 'country/:countryName',
-    component: CountryComponent
-  },
-
-  {
-    path: 'not-found',
-    component: NotFoundComponent
+    path: 'country/:id',
+    component: CountryDetail,
   },
   {
     path: '**',

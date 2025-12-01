@@ -1,4 +1,4 @@
-<section class="home">
+<section class="page">
 
   @if (isLoading()) {
     <div class="home-skeleton">
@@ -8,11 +8,11 @@
     </div>
   }
 
-  <div class="home__chart">
-    <app-medals-pie-chart
+  <div class="page__chart">
+    <app-pie-chart
       [labels]="chartLabels()"
       [values]="chartValues()"
-      (countrySelected)="onCountrySelected($event)">
-    </app-medals-pie-chart>
+      (sliceSelected)="onCountrySelected($event)">
+    </app-pie-chart>
   </div>
 </section>

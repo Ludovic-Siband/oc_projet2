@@ -1,0 +1,34 @@
+@use 'src/styles/tokens' as *;
+
+.country {
+  display: flex;
+  flex-direction: column;
+  gap: $space-l;
+}
+
+.country__loading {
+  text-align: center;
+  font-style: italic;
+}
+
+.country__no-data {
+  text-align: center;
+  color: gray;
+}
+
+.country__footer {
+  display: flex;
+  justify-content: center;
+  margin-top: $space-m;
+
+  button {
+    padding: $space-xs $space-m;
+    border-radius: 999px;
+    border: 1px solid #0b868f;
+    cursor: pointer;
+
+    &:hover{
+      opacity: 0.85;
+    }
+  }
+}

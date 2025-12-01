@@ -1,4 +1,4 @@
-import { Component, OnInit, computed, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, computed, inject, signal } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { take } from 'rxjs';
@@ -17,7 +17,8 @@ import { HeaderIndicator } from 'src/app/core/layout/header/header.model';
   standalone: true,
   templateUrl: './home.html',
   styleUrls: ['./home.scss'],
-  imports: [PieChart]
+  imports: [PieChart],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 
 export class Home implements OnInit {
@@ -54,7 +55,7 @@ export class Home implements OnInit {
 
   ngOnInit(): void {
     this.updateHeader();
-    
+
     this.olympicDataService
       .getCountries$()
       .pipe(take(1))
@@ -65,7 +66,7 @@ export class Home implements OnInit {
           this.isLoading.set(false);
         },
         error: () => {
-          this.isLoading.set(false); 
+          this.isLoading.set(false);
           this.toastService.showError(
             'An error occurred while loading olympic data.',
             6000);
@@ -73,8 +74,17 @@ export class Home implements OnInit {
       });
   }
 
-  onCountrySelected(country: string): void {
-    this.router.navigate(['country', country]);
+  onCountrySelected(event: string | Event): void {
+    const country = typeof event === 'string' ? event : undefined;
+
+    if (!country) {
+      return;
+    }
+
+    this.router.navigate([
+      'country',
+      this.olympicDataService.toCountrySlug(country),
+    ]);
   }
 
   private updateHeader(): void {

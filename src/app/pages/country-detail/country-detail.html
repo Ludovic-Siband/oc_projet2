@@ -1,0 +1,27 @@
+<div class="country page">
+  @if (isLoading()) {
+    <div class="country__loading">
+      Loading country data...
+    </div>
+  }
+
+  <div class="page__chart">
+    @if (chartYears().length > 0) {
+      <app-line-chart
+        [labels]="chartYears()"
+        [values]="chartMedals()"
+        datasetLabel="Medals per year"
+      />
+    } @else {
+      <p class="country__no-data">
+        No participation data available for this country.
+      </p>
+    }
+  </div>
+
+  <div class="country__footer">
+    <button type="button" (click)="onBackToHome()">
+      Return to home
+    </button>
+  </div>
+</div>
