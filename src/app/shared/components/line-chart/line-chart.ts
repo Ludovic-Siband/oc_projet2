@@ -1,60 +1,51 @@
 import {
+  AfterViewInit,
   Component,
   ElementRef,
-  EventEmitter,
   Input,
   OnDestroy,
-  Output,
   ViewChild,
-  AfterViewInit,
 } from '@angular/core';
 import Chart from 'chart.js/auto';
 
 /**
- * Displays a standalone pie chart using Chart.js.
+ * Displays a standalone line chart using Chart.js.
  * 
  * It is responsible only for:
- *  - Rendering a pie chart based on provided labels and values
- *  - Handling user interaction on the chart (click on a slice)
- *  - Emitting the selected country label back to the parent component
+ *  - Rendering a line chart from provided labels and numeric values
+ *  - Destroy the previous chart instance before creating a new one
+ *  - Wait for the view to be initialized before rendering (canvas required)
  */
 @Component({
-  selector: 'app-pie-chart',
+  selector: 'app-line-chart',
   standalone: true,
   template: `
-    <div class="pie-chart">
+    <div class="line-chart">
       <canvas #canvas></canvas>
     </div>
   `,
 })
-export class PieChart implements OnDestroy, AfterViewInit {
+export class LineChart implements AfterViewInit, OnDestroy {
   private chart?: Chart;
-  private _labels: string[] = [];
-  private _values: number[] = [];
   private viewReady = false;
+  private _labels: (string | number)[] = [];
+  private _values: number[] = [];
+  private _datasetLabel = 'Values';
 
-    /**
-     * Labels used for the chart slices.
-     * Trigger a chart re-render when updated.
-     */
-  @Input() set labels(value: string[]) {
+  @Input() set labels(value: (string | number)[]) {
     this._labels = value ?? [];
     this.renderChartIfReady();
   }
 
-    /**
-     * Numeric values associated with each label.
-     * Trigger a chart re-render when updated.
-     */
   @Input() set values(value: number[]) {
     this._values = value ?? [];
     this.renderChartIfReady();
   }
 
-    /**
-     * Emits the label corresponding to the clicked chart slice.
-     */
-    @Output() sliceSelected = new EventEmitter<string>();
+  @Input() set datasetLabel(value: string) {
+    this._datasetLabel = value ?? 'Values';
+    this.renderChartIfReady();
+  }
 
   @ViewChild('canvas', { static: true })
   private canvasRef!: ElementRef<HTMLCanvasElement>;
@@ -69,6 +60,7 @@ export class PieChart implements OnDestroy, AfterViewInit {
   }
 
   private renderChartIfReady(): void {
+    
     if (!this.viewReady) {
       return;
     }
@@ -90,33 +82,21 @@ export class PieChart implements OnDestroy, AfterViewInit {
     }
 
     this.chart = new Chart(context, {
-      type: 'pie',
+      type: 'line',
       data: {
         labels: this._labels,
         datasets: [
           {
-            label: 'Medals',
+            label: this._datasetLabel,
             data: this._values,
-            backgroundColor: ['#0b868f', '#adc3de', '#7a3c53', '#8f6263', 'orange', '#94819d'],
-            hoverOffset: 4,
+            borderWidth: 2,
+            tension: 0.2,
           },
         ],
       },
       options: {
         responsive: true,
         maintainAspectRatio: false,
-        onClick: (_event, elements) => {
-          if (!this.chart || !elements.length) {
-            return;
-          }
-
-          const index = elements[0].index;
-          const label = this.chart.data.labels?.[index];
-
-          if (typeof label === 'string') {
-            this.sliceSelected.emit(label);
-          }
-        },
       },
     });
   }
