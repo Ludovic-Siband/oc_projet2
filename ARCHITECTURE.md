@@ -1,4 +1,4 @@
-# Architecture proposal & refactoring plan
+# Architecture refactoring plan
 
 ## 1. Problems identified in the starter
 - No clear separation between pages, components, services, and models.
