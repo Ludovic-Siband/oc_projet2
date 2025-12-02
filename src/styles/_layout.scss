@@ -44,6 +44,15 @@
   }
 }
 
+.sr-only-table {
+  position: absolute;
+  left: -9999px;
+  top: auto;
+  width: auto;
+  height: auto;
+  overflow: hidden;
+}
+
 @include mix.tablet {
   .page {
     padding: $space-l $space-m;

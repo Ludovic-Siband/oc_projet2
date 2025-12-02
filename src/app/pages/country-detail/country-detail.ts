@@ -55,6 +55,14 @@ export class CountryDetail implements OnInit {
     return participations.map((p) => p.medalsCount);
   });
 
+  readonly participationTable = computed(() =>
+    (this.countrySignal()?.participations ?? []).map((p) => ({
+      year: p.year,
+      medals: p.medalsCount,
+      athletes: p.athleteCount,
+    }))
+  );
+
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   private readonly olympicDataService = inject(OlympicDataService);
@@ -63,7 +71,7 @@ export class CountryDetail implements OnInit {
 
   ngOnInit(): void {
     const idParam = this.route.snapshot.paramMap.get('id');
-    
+
     this.olympicDataService
       .getCountryByIdOrSlug$(idParam!)
       .pipe(take(1))

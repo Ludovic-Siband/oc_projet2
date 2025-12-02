@@ -7,15 +7,6 @@
   text-align: center;
 }
 
-.sr-only-table {
-  position: absolute;
-  left: -9999px;
-  top: auto;
-  width: auto;
-  height: auto;
-  overflow: hidden;
-}
-
 @include mix.tablet {
   .home {
     padding: $space-l $space-m;
