@@ -177,4 +177,28 @@ Ensures type safety and allows the same domain types to be reused across feature
 
 ## UI Screenshot
 
-Comming soon
+### Dashboard view :
+
+- Dashboard laptop view
+![Dashboard laptop view](./docs/src/dashboard-laptop.png)
+
+- Dashboard tablet view
+![Dashboard tablet view](./docs/src/dashboard-tablet.png)
+
+- Dashboard mobile view
+![Dashboard mobile view](./docs/src/dashboard-mobile.png)
+
+### Country view :
+
+- Country laptop view:
+![Country laptop view](./docs/src/country-laptop.png)
+
+- Country tablet view:
+![Country tablet view](./docs/src/country-tablet.png)
+
+- Country mobile view: 
+![Country mobile view](./docs/src/country-mobile.png)
+
+### Lighthouse score :
+
+![Lighthouse score](./docs/src/lighthouse-score.png)
