@@ -9,6 +9,7 @@ import {
   AfterViewInit,
 } from '@angular/core';
 import Chart from 'chart.js/auto';
+import ChartDataLabels from 'chartjs-plugin-datalabels';
 
 /**
  * Displays a standalone pie chart using Chart.js.
@@ -23,7 +24,10 @@ import Chart from 'chart.js/auto';
   standalone: true,
   template: `
     <div class="pie-chart">
-      <canvas #canvas></canvas>
+      <canvas
+        #canvas
+        role="img">
+      </canvas>
     </div>
   `,
 })
@@ -91,6 +95,7 @@ export class PieChart implements OnDestroy, AfterViewInit {
 
     this.chart = new Chart(context, {
       type: 'pie',
+      plugins: [ChartDataLabels],
       data: {
         labels: this._labels,
         datasets: [
@@ -105,6 +110,36 @@ export class PieChart implements OnDestroy, AfterViewInit {
       options: {
         responsive: true,
         maintainAspectRatio: false,
+        layout:{
+          padding: {
+            top: 24,
+            right: 24,
+            bottom: 24,
+            left: 24,
+          },
+        },
+        plugins: {
+          legend: {display: false},
+          tooltip: {enabled: true},
+          datalabels: {
+            formatter: (_value, context) => {
+              const labels = context.chart.data.labels;
+              const label = labels ? labels[context.dataIndex] : undefined;
+
+              return typeof label === 'string' ? label : '';
+            },
+            anchor: 'end',
+            align: 'end',
+            offset: 8,
+            clamp: true,
+            clip: false,
+            color: '#3b3b3b',
+            font: {
+              size: 14,
+              weight: 500
+            }
+          }
+        },
         onClick: (_event, elements) => {
           if (!this.chart || !elements.length) {
             return;
