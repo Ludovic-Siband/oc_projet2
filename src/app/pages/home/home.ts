@@ -48,6 +48,13 @@ export class Home implements OnInit {
     )
   );
 
+  readonly countriesTable = computed(() =>
+  this.countriesSignal().map((c) => ({
+    country: c.country,
+    totalMedals: c.participations.reduce((sum, p) => sum + p.medalsCount, 0),
+  }))
+);
+
   private readonly router = inject(Router);
   private readonly olympicDataService = inject(OlympicDataService);
   private readonly toastService = inject(ToastService);
